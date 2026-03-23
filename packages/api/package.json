@@ -1,0 +1,29 @@
+{
+  "name": "@auth/api",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@auth/auth": "workspace:*",
+    "@auth/db": "workspace:*",
+    "@auth/env": "workspace:*",
+    "@orpc/client": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/server": "catalog:",
+    "@orpc/zod": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@auth/config": "workspace:*",
+    "hono": "catalog:",
+    "typescript": "^5"
+  }
+}
