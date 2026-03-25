@@ -1,0 +1,26 @@
+{
+  "name": "@falcon-auth/sdk",
+  "version": "0.0.1",
+  "private": false,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc -b"
+  },
+  "dependencies": {
+    "@better-auth/oauth-provider": "catalog:"
+  },
+  "devDependencies": {
+    "@falcon/auth-config": "workspace:*",
+    "better-auth": "catalog:",
+    "typescript": "^5"
+  },
+  "peerDependencies": {
+    "better-auth": ">=1.5.6"
+  }
+}

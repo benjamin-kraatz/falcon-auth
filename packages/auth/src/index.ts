@@ -1,39 +1,57 @@
 import { db } from "@falcon/auth-db";
 import * as schema from "@falcon/auth-db/schema/auth";
 import { env } from "@falcon/auth-env/server";
+import { oauthProvider } from "@better-auth/oauth-provider";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { admin, jwt, organization } from "better-auth/plugins";
+
+const adminUserIds = env.FALCON_ADMIN_USER_IDS?.split(",")
+  .map((id) => id.trim())
+  .filter(Boolean);
+
+const issuerOrigin = new URL(env.BETTER_AUTH_URL).origin;
 
 export const auth = betterAuth({
+  appName: "FALCON Auth",
   database: drizzleAdapter(db, {
     provider: "sqlite",
-
-    schema: schema,
+    schema,
   }),
-  trustedOrigins: [env.CORS_ORIGIN],
+  trustedOrigins: [env.CORS_ORIGIN, issuerOrigin],
   emailAndPassword: {
     enabled: true,
   },
-  // uncomment cookieCache setting when ready to deploy to Cloudflare using *.workers.dev domains
-  // session: {
-  //   cookieCache: {
-  //     enabled: true,
-  //     maxAge: 60,
-  //   },
-  // },
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
+  rateLimit: {
+    enabled: true,
+    window: 60,
+    max: 100,
+  },
+  plugins: [
+    jwt(),
+    organization({
+      teams: { enabled: true },
+    }),
+    admin({
+      ...(adminUserIds?.length ? { adminUserIds } : {}),
+      impersonationSessionDuration: 60 * 60,
+    }),
+    oauthProvider({
+      loginPage: "/hosted/sign-in",
+      consentPage: "/hosted/consent",
+      silenceWarnings: {
+        oauthAuthServerConfig: true,
+        openidConfig: true,
+      },
+    }),
+  ],
   advanced: {
     defaultCookieAttributes: {
-      sameSite: "none",
-      secure: true,
+      sameSite: "lax",
+      secure: env.BETTER_AUTH_URL.startsWith("https://"),
       httpOnly: true,
     },
-    // uncomment crossSubDomainCookies setting when ready to deploy and replace <your-workers-subdomain> with your actual workers subdomain
-    // https://developers.cloudflare.com/workers/wrangler/configuration/#workersdev
-    // crossSubDomainCookies: {
-    //   enabled: true,
-    //   domain: "<your-workers-subdomain>",
-    // },
   },
 });

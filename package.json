@@ -15,7 +15,8 @@
       "@orpc/server": "^1.12.2",
       "@orpc/openapi": "^1.12.2",
       "@orpc/zod": "^1.12.2",
-      "better-auth": "1.5.5",
+      "better-auth": "1.5.6",
+      "@better-auth/oauth-provider": "1.5.6",
       "alchemy": "^0.87.0",
       "wrangler": "^4.54.0",
       "lucide-react": "^0.546.0",
@@ -45,7 +46,8 @@
     "db:local": "nx run-many -t db:local --projects=@falcon/auth-db",
     "deploy": "nx run-many -t deploy --projects=@falcon/auth-infra",
     "destroy": "nx run-many -t destroy --projects=@falcon/auth-infra",
-    "check": "oxlint && oxfmt --write"
+    "check": "oxlint && oxfmt --write",
+    "auth:generate-schema": "bunx @better-auth/cli@latest generate --config packages/auth/src/index.ts --output packages/db/src/schema/auth.ts -y"
   },
   "dependencies": {
     "@falcon/auth-env": "workspace:*",
