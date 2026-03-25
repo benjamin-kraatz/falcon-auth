@@ -1,0 +1,41 @@
+---
+title: Deploy docs on Vercel
+description: Host this documentation site on Vercel (Nitro preset).
+icon: Cloud
+---
+
+The docs app (`apps/docs`) builds with **Vite** and **Nitro** using the **Vercel** preset. The build emits `.vercel/output/` for deployment.
+
+## One-time project settings
+
+| Setting              | Value                                           |
+| -------------------- | ----------------------------------------------- |
+| **Root Directory**   | `apps/docs`                                     |
+| **Install Command**  | `cd ../.. && bun install`                       |
+| **Build Command**    | `cd ../.. && bun run build:docs`                |
+| **Output Directory** | _(leave empty — Nitro writes `.vercel/output`)_ |
+
+The repo root [`vercel.json`](https://vercel.com/docs/project-configuration) in `apps/docs/vercel.json` mirrors these commands so they stay in version control.
+
+## What gets deployed
+
+- Static assets and prerendered pages from the TanStack Start build.
+- A serverless function (`__server`) for SSR and API routes (search, LLM exports, etc.).
+
+## Environment variables
+
+None are required for the documentation content alone. If you later enable Orama Cloud, Algolia, or analytics, add those keys in the Vercel project settings.
+
+## Verify locally
+
+From the monorepo root:
+
+```bash
+bun run build:docs
+```
+
+Preview (if supported by your Nitro version):
+
+```bash
+cd apps/docs && bun run preview
+```

@@ -22,8 +22,42 @@ function oauthQueryFromUrl(): string {
   return `typeof window !== 'undefined' ? window.location.search : ''`;
 }
 
+/** Shared helpers for OAuth flows (signed query from authorize redirect). */
+function oauthHelpers(): string {
+  const api = JSON.stringify(authApiBase());
+  return `
+function __oauthQueryString() {
+  const q = ${oauthQueryFromUrl()};
+  if (!q || q.length <= 1) return '';
+  return q.startsWith('?') ? q.slice(1) : q;
+}
+async function __continueOAuth(kind) {
+  const oauthQ = __oauthQueryString();
+  if (!oauthQ) return null;
+  const body = { oauth_query: oauthQ };
+  if (kind === 'postLogin') body.postLogin = true;
+  if (kind === 'created') body.created = true;
+  const res = await fetch(${api} + '/oauth2/continue', {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    return { error: data.message || data.error_description || data.error || 'OAuth continue failed' };
+  }
+  const target = data.url || data.redirect_uri;
+  if (target) {
+    window.location.href = target;
+    return { done: true };
+  }
+  return { error: 'Unexpected response from OAuth continue' };
+}
+`;
+}
+
 export function hostedSignInHtml(): string {
-  const oauthQueryJs = oauthQueryFromUrl();
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -46,7 +80,7 @@ export function hostedSignInHtml(): string {
   <p><a href="/hosted/sign-up">Create an account</a></p>
   <script>
     const api = ${JSON.stringify(authApiBase())};
-    const q = ${oauthQueryJs};
+    ${oauthHelpers()}
     document.getElementById('f').addEventListener('submit', async (e) => {
       e.preventDefault();
       const err = document.getElementById('err');
@@ -54,9 +88,8 @@ export function hostedSignInHtml(): string {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       const body = { email, password, callbackURL: '/' };
-      if (q && q.length > 1) {
-        body.oauth_query = q.startsWith('?') ? q.slice(1) : q;
-      }
+      const oauthQ = __oauthQueryString();
+      if (oauthQ) body.oauth_query = oauthQ;
       const res = await fetch(api + '/sign-in/email', {
         method: 'POST',
         credentials: 'include',
@@ -67,6 +100,14 @@ export function hostedSignInHtml(): string {
       if (!res.ok) {
         err.textContent = data.message || data.error || 'Sign in failed';
         return;
+      }
+      if (oauthQ) {
+        const cont = await __continueOAuth('postLogin');
+        if (cont?.error) {
+          err.textContent = cont.error;
+          return;
+        }
+        if (cont?.done) return;
       }
       if (data.url) {
         window.location.href = data.url;
@@ -104,7 +145,7 @@ export function hostedSignUpHtml(): string {
   <p><a href="/hosted/sign-in">Already have an account?</a></p>
   <script>
     const api = ${JSON.stringify(authApiBase())};
-    const q = ${oauthQueryFromUrl()};
+    ${oauthHelpers()}
     document.getElementById('f').addEventListener('submit', async (e) => {
       e.preventDefault();
       const err = document.getElementById('err');
@@ -113,9 +154,8 @@ export function hostedSignUpHtml(): string {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
       const body = { name, email, password, callbackURL: '/' };
-      if (q && q.length > 1) {
-        body.oauth_query = q.startsWith('?') ? q.slice(1) : q;
-      }
+      const oauthQ = __oauthQueryString();
+      if (oauthQ) body.oauth_query = oauthQ;
       const res = await fetch(api + '/sign-up/email', {
         method: 'POST',
         credentials: 'include',
@@ -126,6 +166,14 @@ export function hostedSignUpHtml(): string {
       if (!res.ok) {
         err.textContent = data.message || data.error || 'Sign up failed';
         return;
+      }
+      if (oauthQ) {
+        const cont = await __continueOAuth('created');
+        if (cont?.error) {
+          err.textContent = cont.error;
+          return;
+        }
+        if (cont?.done) return;
       }
       if (data.url) {
         window.location.href = data.url;
@@ -178,12 +226,10 @@ export function hostedConsentHtml(): string {
         err.textContent = data.message || data.error_description || data.error || 'Consent failed';
         return;
       }
-      if (data.redirect_uri) {
-        window.location.href = data.redirect_uri;
+      const target = data.url || data.redirect_uri;
+      if (target) {
+        window.location.href = target;
         return;
-      }
-      if (data.url) {
-        window.location.href = data.url;
       }
     }
     document.getElementById('f').addEventListener('submit', (e) => {

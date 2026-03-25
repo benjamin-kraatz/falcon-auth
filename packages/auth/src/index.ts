@@ -12,13 +12,18 @@ const adminUserIds = env.FALCON_ADMIN_USER_IDS?.split(",")
 
 const issuerOrigin = new URL(env.BETTER_AUTH_URL).origin;
 
+const extraTrustedOrigins =
+  env.FALCON_TRUSTED_ORIGINS?.split(",")
+    .map((o) => o.trim())
+    .filter(Boolean) ?? [];
+
 export const auth = betterAuth({
   appName: "FALCON Auth",
   database: drizzleAdapter(db, {
     provider: "sqlite",
     schema,
   }),
-  trustedOrigins: [env.CORS_ORIGIN, issuerOrigin],
+  trustedOrigins: [env.CORS_ORIGIN, issuerOrigin, ...extraTrustedOrigins],
   emailAndPassword: {
     enabled: true,
   },
@@ -40,6 +45,7 @@ export const auth = betterAuth({
     }),
     oauthProvider({
       loginPage: "/hosted/sign-in",
+      signup: { page: "/hosted/sign-up" },
       consentPage: "/hosted/consent",
       silenceWarnings: {
         oauthAuthServerConfig: true,

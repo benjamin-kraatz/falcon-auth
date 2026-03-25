@@ -19,6 +19,7 @@ icon: Lock
 
 - `CORS_ORIGIN` must list your admin UI origin exactly.
 - The auth config also trusts the issuer origin for API calls from hosted pages.
+- `FALCON_TRUSTED_ORIGINS` (comma-separated) can list **additional** HTTPS origins, for example Vercel preview deployments of the admin UI. Prefer stable production origins in `CORS_ORIGIN` when possible.
 - Do not disable CSRF or origin checks without a documented exception.
 
 ## Rate limiting

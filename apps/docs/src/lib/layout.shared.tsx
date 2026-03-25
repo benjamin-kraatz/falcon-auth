@@ -2,7 +2,7 @@ import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 
 export const gitConfig = {
   user: "benjamin-kraatz",
-  repo: "falcon-connect",
+  repo: "falcon-auth",
   branch: "main",
 };
 

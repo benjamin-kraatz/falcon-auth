@@ -86,6 +86,10 @@ If you want to add app-specific blocks instead of shared primitives, run the sha
 
 For more details, see the guide on [Deploying to Cloudflare with Alchemy](https://www.better-t-stack.dev/docs/guides/cloudflare-alchemy).
 
+## Documentation site (Vercel)
+
+Public docs live in `apps/docs`. See **[apps/docs/README.md](./apps/docs/README.md)** for Vercel root directory, install/build commands, and `bun run build:docs` from the monorepo root.
+
 ## Git Hooks and Formatting
 
 - Format and lint fix: `bun run check`

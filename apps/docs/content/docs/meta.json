@@ -9,6 +9,7 @@
     "organizations",
     "sdk",
     "security",
+    "vercel",
     "falcon-connect"
   ]
 }
