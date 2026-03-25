@@ -1,0 +1,58 @@
+---
+title: Organizations
+description: Multi-tenant organization management in FALCON Auth
+---
+
+# Organizations
+
+FALCON Auth supports multi-tenant organizations out of the box. Users can belong to multiple organizations with different roles in each.
+
+## Concepts
+
+- **Organization** — A team, company, or workspace. Has a name, slug, and optional logo.
+- **Member** — A user who belongs to an organization. Has a role within the organization.
+- **Invitation** — Invite someone to join an organization via email.
+- **Role** — Access level within an organization (`owner`, `admin`, `member`).
+
+## Organization Roles
+
+| Role | Permissions |
+|------|-------------|
+| `owner` | Full control: delete org, manage all members |
+| `admin` | Manage members and settings |
+| `member` | Basic access |
+
+## Creating an Organization
+
+Users can create organizations from the FALCON Auth dashboard or via the API:
+
+```ts
+// Using better-auth client with organization plugin
+const { data } = await authClient.organization.create({
+  name: "Acme Corp",
+  slug: "acme-corp",
+});
+```
+
+## Inviting Members
+
+```ts
+await authClient.organization.inviteMember({
+  organizationId: "org_abc123",
+  email: "colleague@example.com",
+  role: "member",
+});
+```
+
+## Getting the Active Organization
+
+```ts
+const { data: members } = await authClient.organization.getFullOrganization();
+```
+
+## Organization Limits
+
+- Each user can create up to **5 organizations**
+- Each organization can have up to **100 members**
+
+These limits can be adjusted by FALCON Auth administrators.

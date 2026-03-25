@@ -1,0 +1,167 @@
+---
+title: SDK Reference
+description: Complete API reference for the @falcon-auth/sdk package
+---
+
+# SDK Reference
+
+## `createFalconAuthClient(config)`
+
+Creates a new FALCON Auth client instance.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `issuerUrl` | `string` | ✓ | FALCON Auth server URL |
+| `clientId` | `string` | ✓ | Your OAuth client ID |
+| `clientSecret` | `string` | — | Client secret (server-side only) |
+| `redirectUri` | `string` | ✓ | OAuth callback URL |
+| `scopes` | `string[]` | — | Default scopes (default: `["openid", "email", "profile"]`) |
+
+### Returns
+
+`FalconAuthClient` instance.
+
+---
+
+## `client.getAuthorizationUrl(params?)`
+
+Generates an OAuth authorization URL with PKCE.
+
+### Parameters
+
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `additionalScopes` | `string[]` | Extra scopes to request |
+| `state` | `string` | Custom state (auto-generated if omitted) |
+| `loginHint` | `string` | Pre-fill the email field |
+| `prompt` | `"none" \| "login" \| "consent" \| "select_account"` | Force specific prompt |
+
+### Returns
+
+```ts
+{
+  url: string;          // Redirect users here
+  state: string;        // Store this for CSRF verification
+  codeVerifier: string; // Store this for code exchange
+}
+```
+
+---
+
+## `client.exchangeCode({ code, codeVerifier })`
+
+Exchanges an authorization code for tokens.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `code` | `string` | ✓ | Authorization code from callback |
+| `codeVerifier` | `string` | ✓ | PKCE code verifier |
+
+### Returns
+
+```ts
+{
+  accessToken: string;
+  tokenType: string;
+  expiresIn?: number;
+  refreshToken?: string;
+  idToken?: string;
+  scope?: string;
+}
+```
+
+---
+
+## `client.refreshTokens(refreshToken)`
+
+Refreshes an expired access token.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `refreshToken` | `string` | ✓ | The refresh token |
+
+### Returns
+
+Same as `exchangeCode`.
+
+---
+
+## `client.getUserInfo(accessToken)`
+
+Fetches user information from the userinfo endpoint.
+
+### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `accessToken` | `string` | ✓ | Valid access token |
+
+### Returns
+
+```ts
+{
+  sub: string;
+  name?: string;
+  email?: string;
+  emailVerified?: boolean;
+  picture?: string;
+  role?: string;
+}
+```
+
+---
+
+## `client.revokeToken(token, tokenType?)`
+
+Revokes a token (signs the user out).
+
+### Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `token` | `string` | — | Token to revoke |
+| `tokenType` | `"access_token" \| "refresh_token"` | `"access_token"` | Token type hint |
+
+---
+
+## `client.getDiscoveryDocument()`
+
+Fetches the OIDC discovery document (`.well-known/openid-configuration`).
+
+---
+
+## Types
+
+```ts
+interface FalconAuthConfig {
+  issuerUrl: string;
+  clientId: string;
+  clientSecret?: string;
+  redirectUri: string;
+  scopes?: string[];
+}
+
+interface FalconAuthTokens {
+  accessToken: string;
+  tokenType: string;
+  expiresIn?: number;
+  refreshToken?: string;
+  idToken?: string;
+  scope?: string;
+}
+
+interface FalconAuthUser {
+  sub: string;
+  name?: string;
+  email?: string;
+  emailVerified?: boolean;
+  picture?: string;
+  role?: string;
+}
+```

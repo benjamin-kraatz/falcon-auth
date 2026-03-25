@@ -1,0 +1,72 @@
+---
+title: Scopes & Permissions
+description: Available OAuth scopes and what they grant access to
+---
+
+# Scopes & Permissions
+
+FALCON Auth uses OAuth scopes to define what information your application can access.
+
+## Standard Scopes
+
+| Scope | Description | Claims Included |
+|-------|-------------|-----------------|
+| `openid` | Verify user identity (required for OIDC) | `sub` |
+| `email` | Access user's email address | `email`, `email_verified` |
+| `profile` | Access basic profile info | `name`, `picture` |
+| `offline_access` | Get refresh tokens for offline access | (enables refresh tokens) |
+
+## Requesting Scopes
+
+Specify scopes when creating the authorization URL:
+
+```ts
+const { url } = await falconAuth.getAuthorizationUrl({
+  additionalScopes: ["offline_access"],
+});
+// Total scopes: openid email profile offline_access (plus any configured defaults)
+```
+
+Or configure default scopes when creating the client:
+
+```ts
+const falconAuth = createFalconAuthClient({
+  // ...
+  scopes: ["openid", "email", "profile", "offline_access"],
+});
+```
+
+## ID Token Claims
+
+When you include the `openid` scope, FALCON Auth issues an ID token (JWT) with these claims:
+
+| Claim | Type | Description |
+|-------|------|-------------|
+| `sub` | string | Unique user identifier |
+| `name` | string | Full name (with `profile`) |
+| `email` | string | Email address (with `email`) |
+| `email_verified` | boolean | Whether email is verified |
+| `picture` | string | Avatar URL (with `profile`) |
+| `iss` | string | Token issuer (FALCON Auth URL) |
+| `aud` | string | Token audience (your client ID) |
+| `exp` | number | Token expiry (Unix timestamp) |
+| `iat` | number | Token issued at (Unix timestamp) |
+
+## Verifying ID Tokens
+
+For server-side verification, use the JWKS endpoint:
+
+```ts
+// JWKS endpoint
+const jwksUrl = "https://auth.falcon.example.com/api/auth/jwks";
+
+// Using jose library
+import { createRemoteJWKSet, jwtVerify } from "jose";
+
+const JWKS = createRemoteJWKSet(new URL(jwksUrl));
+
+const { payload } = await jwtVerify(idToken, JWKS, {
+  issuer: "https://auth.falcon.example.com",
+  audience: "your-client-id",
+});
+```
