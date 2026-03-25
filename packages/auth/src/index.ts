@@ -3,16 +3,30 @@ import * as schema from "@falcon/auth-db/schema/auth";
 import { env } from "@falcon/auth-env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import {
+  admin,
+  bearer,
+  jwt,
+  oidcProvider,
+  openAPI,
+  organization,
+} from "better-auth/plugins";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
     provider: "sqlite",
-
     schema: schema,
   }),
   trustedOrigins: [env.CORS_ORIGIN],
   emailAndPassword: {
     enabled: true,
+  },
+  emailVerification: {
+    sendOnSignUp: false,
+    autoSignInAfterVerification: true,
+    sendVerificationEmail: async (_params) => {
+      // TODO: wire up transactional email provider
+    },
   },
   // uncomment cookieCache setting when ready to deploy to Cloudflare using *.workers.dev domains
   // session: {
@@ -21,6 +35,12 @@ export const auth = betterAuth({
   //     maxAge: 60,
   //   },
   // },
+  rateLimit: {
+    enabled: true,
+    window: 60,
+    max: 100,
+    storage: "database",
+  },
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
   advanced: {
@@ -36,4 +56,22 @@ export const auth = betterAuth({
     //   domain: "<your-workers-subdomain>",
     // },
   },
+  plugins: [
+    organization({
+      // All authenticated users may create organizations; enforce invitation-only
+      // membership at the application layer using the invitation endpoints.
+      allowUserToCreateOrganization: true,
+    }),
+    admin(),
+    jwt(),
+    openAPI(),
+    oidcProvider({
+      // The server app hosts these pages and calls /oauth2/consent after user action.
+      loginPage: "/sign-in",
+      consentPage: "/consent",
+    }),
+    bearer(),
+  ],
 });
+
+export type Auth = typeof auth;
