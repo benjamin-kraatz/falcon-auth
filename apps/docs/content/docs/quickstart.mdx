@@ -1,0 +1,62 @@
+---
+title: Quickstart
+description: Run FALCON Auth locally and point your app at it.
+icon: Zap
+---
+
+## Prerequisites
+
+- [Bun](https://bun.sh) as the package manager
+- A SQLite-compatible database URL (Turso/libSQL or local file)
+
+## Environment
+
+Create `apps/server/.env` and `apps/web/.env` with values that line up (same origins in development):
+
+```bash
+# apps/server/.env — API + Better Auth
+DATABASE_URL="file:./packages/db/local.db"
+CORS_ORIGIN="http://localhost:3001"
+BETTER_AUTH_URL="http://localhost:3000"
+BETTER_AUTH_SECRET="<generate with: openssl rand -base64 32>"
+# Optional: comma-separated user IDs that are always admins (bootstrap)
+# FALCON_ADMIN_USER_IDS="user-id-1"
+
+# apps/web/.env — admin UI
+VITE_SERVER_URL="http://localhost:3000"
+```
+
+`BETTER_AUTH_URL` must be the **public origin of the auth API** (the server). The web app calls `VITE_SERVER_URL` for both Better Auth (`/api/auth`) and RPC.
+
+## Database
+
+Apply the Drizzle schema to your database (from repo root):
+
+```bash
+bun run db:push
+```
+
+## Development
+
+Start the API and the admin UI (exact commands depend on your Alchemy/NX setup):
+
+```bash
+bun run dev:server   # auth API, default port often 3000
+bun run dev:web       # admin portal, often 3001
+```
+
+## First admin
+
+1. Sign up through `/login` on the web app.
+2. In the database, set `role` to `admin` on your user row (or set `FALCON_ADMIN_USER_IDS` to your user id and redeploy).
+3. Open `/admin` to manage users and impersonation.
+
+## Hosted pages
+
+The auth server serves HTML at:
+
+- `/hosted/sign-in` — email/password sign-in (for OAuth flows, passes `oauth_query` through to Better Auth)
+- `/hosted/sign-up` — registration
+- `/hosted/consent` — OAuth consent
+
+Discovery documents are at `/.well-known/openid-configuration` and `/.well-known/oauth-authorization-server` on the **issuer origin** (your server root), while the auth API lives under `/api/auth/*`.

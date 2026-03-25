@@ -1,0 +1,32 @@
+---
+title: JavaScript SDK
+description: The @falcon-auth/sdk package for browser and server clients.
+icon: Package
+---
+
+Install from the monorepo workspace or publish path your team uses:
+
+```bash
+bun add @falcon-auth/sdk better-auth
+```
+
+## Browser client
+
+```ts
+import { createFalconAuthClient } from "@falcon-auth/sdk";
+
+export const authClient = createFalconAuthClient({
+  baseURL: "https://auth.example.com", // issuer origin; client appends /api/auth
+});
+
+// Examples
+await authClient.signIn.email({ email, password });
+await authClient.organization.create({ name: "Acme", slug: "acme" });
+await authClient.admin.listUsers({ query: { limit: 20 } });
+```
+
+The SDK bundles Better Auth client plugins for **admin**, **organization**, and the **OAuth provider** helper (`oauth_query` forwarding).
+
+## Server-side
+
+For backend-only calls, import `better-auth` server APIs or use `auth.api` on the server package. The SDK is aimed at application frontends integrating with FALCON-hosted auth.

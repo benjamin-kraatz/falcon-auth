@@ -1,0 +1,42 @@
+---
+title: Security
+description: Hardening FALCON Auth end to end.
+icon: Lock
+---
+
+## Transport and cookies
+
+- Use **HTTPS** everywhere in production.
+- Session cookies are **HttpOnly**; `Secure` is set when `BETTER_AUTH_URL` uses `https:`.
+- **SameSite** is `lax` by default in this deployment for compatibility with OAuth redirects; keep redirect URIs strict.
+
+## Secrets
+
+- `BETTER_AUTH_SECRET` must be at least 32 characters of high entropy. Rotate with a controlled session invalidation plan.
+- Database credentials and Turso tokens are secrets; never commit them.
+
+## Origin and CORS
+
+- `CORS_ORIGIN` must list your admin UI origin exactly.
+- The auth config also trusts the issuer origin for API calls from hosted pages.
+- Do not disable CSRF or origin checks without a documented exception.
+
+## Rate limiting
+
+Better Auth rate limiting is enabled on the server configuration. Tune limits for your traffic pattern.
+
+## OAuth
+
+- Enforce **PKCE** for public clients.
+- Register exact redirect URIs.
+- Validate **issuer**, **audience**, and **signature** when verifying JWT access tokens.
+- Treat refresh tokens as secrets; store only in secure server-side or platform vaults.
+
+## Admin and impersonation
+
+- Limit who receives `admin` role or `FALCON_ADMIN_USER_IDS`.
+- Impersonation sessions are time-bounded; monitor and audit.
+
+## Dependency updates
+
+Keep `better-auth` and `@better-auth/oauth-provider` on compatible versions (see monorepo catalog).
