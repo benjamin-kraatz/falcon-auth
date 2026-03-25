@@ -64,9 +64,11 @@ export class FalconAuthClient {
     state: string;
     codeVerifier: string;
   }> {
+    const stateBytes = new Uint8Array(16);
+    crypto.getRandomValues(stateBytes);
     const state =
       params?.state ??
-      btoa(String.fromCharCode(...new Uint8Array(16).map(() => Math.random() * 256)));
+      btoa(String.fromCharCode(...stateBytes)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
     const codeVerifier = await this.generateCodeVerifier();
     const codeChallenge = await this.generateCodeChallenge(codeVerifier);
 
