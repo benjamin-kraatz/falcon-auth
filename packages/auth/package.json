@@ -9,13 +9,16 @@
       "default": "./src/*.ts"
     }
   },
-  "scripts": {},
+  "scripts": {
+    "check-types": "tsc -b"
+  },
   "dependencies": {
     "@falcon/auth-db": "workspace:*",
     "@falcon/auth-env": "workspace:*",
     "better-auth": "catalog:",
     "dotenv": "catalog:",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "@better-auth/oauth-provider": "1.5.5"
   },
   "devDependencies": {
     "@falcon/auth-config": "workspace:*",

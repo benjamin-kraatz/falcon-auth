@@ -1,31 +1,59 @@
 ---
-title: Hello World
-description: Your favourite docs framework.
-icon: Rocket
+title: Introduction
+description: FALCON Auth — the unified identity provider for FALCON applications
 ---
 
-Hey there! Fumadocs is the docs framework that also works on Tanstack Start!
+# FALCON Auth
 
-## Heading
+**FALCON Auth** is a unified, centralized authentication and identity provider platform.
+Think of it like Google or GitHub SSO — except it's yours to own and control.
 
-Hello World!
+Any application can integrate FALCON Auth as an OAuth 2.1 / OIDC identity provider to authenticate users without managing credentials themselves.
 
-<Cards>
-  <Card title="Learn more about Tanstack Start" href="https://tanstack.com/start" />
-  <Card title="Learn more about Fumadocs" href="https://fumadocs.dev" />
-</Cards>
+## What FALCON Auth Provides
 
-### CodeBlock
+- **Identity Provider** — Acts as your own OAuth 2.1 / OIDC server
+- **User Management** — Centralized user accounts, roles, and permissions
+- **Organization Management** — Multi-tenant support with organizations and members
+- **Admin Portal** — Full user and org management with impersonation capabilities
+- **SDK** — Drop-in integration for any TypeScript/JavaScript application
+- **Secure by default** — PKCE, rate limiting, session management built-in
+
+## Quick Start
+
+The fastest way to integrate FALCON Auth in your application:
 
 ```ts
-console.log("Hello World");
+import { createFalconAuthClient } from "@falcon-auth/sdk/client";
+
+const auth = createFalconAuthClient({
+  issuerUrl: "https://auth.falcon.example.com",
+  clientId: "your-client-id",
+  clientSecret: "your-client-secret",
+  redirectUri: "https://yourapp.com/auth/callback",
+});
+
+// Generate an authorization URL and redirect the user
+const { url, state, codeVerifier } = await auth.getAuthorizationUrl();
+// Store state + codeVerifier, then redirect user to url
 ```
 
-#### Table
+## Architecture
 
-| Head                            | Description                         |
-| ------------------------------- | ----------------------------------- |
-| `hello`                         | Hello World                         |
-| very **important**              | Hey                                 |
-| _Surprisingly_                  | Fumadocs                            |
-| very long text that looks weird | hello world hello world hello world |
+```
+Your App  ──────────►  FALCON Auth Server (OAuth 2.1 / OIDC)
+                              │
+                    ┌─────────┴─────────┐
+                    │                   │
+               Auth API           Admin Portal
+             (Better Auth)       (Web App)
+                    │
+               Turso DB (SQLite)
+```
+
+FALCON Auth is built on:
+- **[better-auth](https://better-auth.com)** — The authentication engine
+- **Hono** — Lightweight server framework
+- **Drizzle ORM** — Type-safe database access
+- **TanStack Start** — Admin portal framework
+- **Cloudflare Workers** — Deployment platform

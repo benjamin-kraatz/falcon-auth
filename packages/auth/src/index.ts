@@ -1,26 +1,65 @@
 import { db } from "@falcon/auth-db";
 import * as schema from "@falcon/auth-db/schema/auth";
 import { env } from "@falcon/auth-env/server";
+import { oauthProvider } from "@better-auth/oauth-provider";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import {
+  admin,
+  jwt,
+  openAPI,
+  organization,
+} from "better-auth/plugins";
 
 export const auth = betterAuth({
+  appName: "FALCON Auth",
   database: drizzleAdapter(db, {
     provider: "sqlite",
-
-    schema: schema,
+    schema,
   }),
   trustedOrigins: [env.CORS_ORIGIN],
   emailAndPassword: {
     enabled: true,
+    requireEmailVerification: false,
+    minPasswordLength: 8,
   },
-  // uncomment cookieCache setting when ready to deploy to Cloudflare using *.workers.dev domains
-  // session: {
-  //   cookieCache: {
-  //     enabled: true,
-  //     maxAge: 60,
-  //   },
-  // },
+  session: {
+    expiresIn: 60 * 60 * 24 * 30, // 30 days
+    updateAge: 60 * 60 * 24, // refresh every day
+    cookieCache: {
+      enabled: true,
+      maxAge: 60 * 5, // 5 min
+    },
+  },
+  rateLimit: {
+    enabled: true,
+    window: 60,
+    max: 100,
+    storage: "database",
+  },
+  plugins: [
+    organization({
+      allowUserToCreateOrganization: true,
+      organizationLimit: 5,
+      membershipLimit: 100,
+    }),
+    admin({
+      defaultRole: "user",
+      adminRoles: ["admin", "superadmin"],
+    }),
+    jwt({
+      jwt: {
+        expirationTime: "15m",
+        issuer: env.BETTER_AUTH_URL,
+        audience: env.BETTER_AUTH_URL,
+      },
+    }),
+    oauthProvider({
+      loginPage: "/oauth/authorize",
+      consentPage: "/oauth/consent",
+    }),
+    openAPI(),
+  ],
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
   advanced: {
@@ -29,11 +68,7 @@ export const auth = betterAuth({
       secure: true,
       httpOnly: true,
     },
-    // uncomment crossSubDomainCookies setting when ready to deploy and replace <your-workers-subdomain> with your actual workers subdomain
-    // https://developers.cloudflare.com/workers/wrangler/configuration/#workersdev
-    // crossSubDomainCookies: {
-    //   enabled: true,
-    //   domain: "<your-workers-subdomain>",
-    // },
   },
 });
+
+export type Auth = typeof auth;

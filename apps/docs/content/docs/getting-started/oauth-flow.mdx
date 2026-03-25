@@ -1,0 +1,151 @@
+---
+title: OAuth 2.1 Flow
+description: How to implement the authorization code flow with PKCE
+---
+
+# OAuth 2.1 Authorization Code Flow
+
+FALCON Auth uses OAuth 2.1 with PKCE (Proof Key for Code Exchange) for secure authorization. This is the recommended flow for all applications.
+
+## Overview
+
+```
+User clicks "Sign in"
+       │
+       ▼
+Your App generates code_verifier + code_challenge (PKCE)
+       │
+       ▼
+Redirect user to FALCON Auth /oauth/authorize
+       │
+       ▼
+User signs in (or is already signed in)
+       │
+       ▼
+User grants consent for requested scopes
+       │
+       ▼
+FALCON Auth redirects back with ?code=...
+       │
+       ▼
+Your App exchanges code + code_verifier for tokens
+       │
+       ▼
+Your App fetches user info with access token
+```
+
+## Step 1: Initiate Sign-In
+
+When a user clicks "Sign in with FALCON Auth", generate an authorization URL:
+
+```ts title="app/auth/login/route.ts" (Next.js example)
+import { falconAuth } from "@/lib/auth";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+export async function GET() {
+  const { url, state, codeVerifier } = await falconAuth.getAuthorizationUrl({
+    additionalScopes: ["offline_access"], // request refresh tokens
+  });
+
+  // IMPORTANT: Store state and codeVerifier server-side (cookie or session)
+  const cookieStore = await cookies();
+  cookieStore.set("oauth_state", state, { httpOnly: true, secure: true, maxAge: 600 });
+  cookieStore.set("oauth_code_verifier", codeVerifier, { httpOnly: true, secure: true, maxAge: 600 });
+
+  redirect(url);
+}
+```
+
+## Step 2: Handle the Callback
+
+After the user approves, FALCON Auth redirects back with `?code=...&state=...`:
+
+```ts title="app/auth/callback/route.ts" (Next.js example)
+import { falconAuth } from "@/lib/auth";
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const code = url.searchParams.get("code");
+  const state = url.searchParams.get("state");
+  const error = url.searchParams.get("error");
+
+  // Handle user denial
+  if (error === "access_denied") {
+    redirect("/");
+  }
+
+  const cookieStore = await cookies();
+  const storedState = cookieStore.get("oauth_state")?.value;
+  const codeVerifier = cookieStore.get("oauth_code_verifier")?.value;
+
+  // CSRF protection: verify state matches
+  if (!state || state !== storedState) {
+    return new Response("Invalid state", { status: 400 });
+  }
+
+  if (!code || !codeVerifier) {
+    return new Response("Missing code or verifier", { status: 400 });
+  }
+
+  // Exchange code for tokens
+  const tokens = await falconAuth.exchangeCode({ code, codeVerifier });
+
+  // Get user info
+  const user = await falconAuth.getUserInfo(tokens.accessToken);
+
+  // Create your own session with the user info
+  // Store tokens.refreshToken if you need offline access
+
+  // Clean up PKCE cookies
+  cookieStore.delete("oauth_state");
+  cookieStore.delete("oauth_code_verifier");
+
+  redirect("/dashboard");
+}
+```
+
+## Step 3: Access User Info
+
+```ts
+const user = await falconAuth.getUserInfo(accessToken);
+// {
+//   sub: "user_abc123",
+//   name: "Jane Smith",
+//   email: "jane@example.com",
+//   emailVerified: true,
+//   picture: "https://...",
+//   role: "user"
+// }
+```
+
+## Refreshing Tokens
+
+If you requested `offline_access` scope, you can refresh tokens without user interaction:
+
+```ts
+const newTokens = await falconAuth.refreshTokens(refreshToken);
+// Store the new access token and optionally the new refresh token
+```
+
+## Signing Out
+
+To sign out, revoke the token and clear your local session:
+
+```ts
+await falconAuth.revokeToken(accessToken);
+// Clear your session cookies/storage
+```
+
+## Security Notes
+
+<Callout type="warn">
+Always follow these security practices:
+- Store `state` and `code_verifier` server-side (never in URL or client-side JS)
+- Always verify the `state` parameter on callback
+- Use `httpOnly` and `secure` flags on session cookies
+- Never log access tokens
+- Rotate refresh tokens on each use
+</Callout>

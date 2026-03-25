@@ -1,0 +1,76 @@
+---
+title: Security
+description: Security features and best practices for FALCON Auth
+---
+
+# Security
+
+FALCON Auth is built with security as a first-class concern.
+
+## Built-in Security Features
+
+### PKCE (Proof Key for Code Exchange)
+All authorization code flows require PKCE with `S256` challenge method. This prevents authorization code interception attacks.
+
+### Rate Limiting
+Authentication endpoints are rate-limited to 100 requests per minute per IP. This prevents brute force attacks.
+
+### Secure Cookies
+All session cookies are set with:
+- `HttpOnly` — Prevents JavaScript access
+- `Secure` — HTTPS only
+- `SameSite=None` — Required for cross-domain OAuth (combined with `Secure`)
+
+### Session Management
+- Sessions expire after 30 days of inactivity
+- Session tokens are rotated on each refresh
+- Admin users can revoke any session
+
+### CSRF Protection
+- State parameter validation on all OAuth flows
+- Origin checking on API endpoints
+
+## Token Security
+
+### Access Tokens
+- Short-lived (15 minutes by default)
+- Signed with RS256 (RSA SHA-256)
+- Verifiable via JWKS endpoint
+
+### Refresh Tokens
+- Long-lived but revocable
+- Bound to client and user
+- Rotate on each use (sliding expiry)
+
+### ID Tokens
+- Standard JWT claims
+- Verifiable via JWKS
+- Include issuer and audience validation
+
+## Verifying Tokens Server-Side
+
+Always verify tokens on your server, never trust the client:
+
+```ts
+import { createRemoteJWKSet, jwtVerify } from "jose";
+
+const JWKS = createRemoteJWKSet(
+  new URL("https://auth.falcon.example.com/api/auth/jwks")
+);
+
+async function verifyToken(token: string) {
+  try {
+    const { payload } = await jwtVerify(token, JWKS, {
+      issuer: "https://auth.falcon.example.com",
+      audience: "your-client-id",
+    });
+    return payload;
+  } catch (err) {
+    throw new Error("Invalid token");
+  }
+}
+```
+
+## Reporting Security Issues
+
+If you discover a security vulnerability, please report it privately to the FALCON team rather than opening a public issue.

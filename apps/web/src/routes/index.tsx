@@ -1,50 +1,45 @@
-import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
-
-import { orpc } from "@/utils/orpc";
+import { createFileRoute, Link } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
   component: HomeComponent,
 });
 
-const TITLE_TEXT = `
- ██████╗ ███████╗████████╗████████╗███████╗██████╗
- ██╔══██╗██╔════╝╚══██╔══╝╚══██╔══╝██╔════╝██╔══██╗
- ██████╔╝█████╗     ██║      ██║   █████╗  ██████╔╝
- ██╔══██╗██╔══╝     ██║      ██║   ██╔══╝  ██╔══██╗
- ██████╔╝███████╗   ██║      ██║   ███████╗██║  ██║
- ╚═════╝ ╚══════╝   ╚═╝      ╚═╝   ╚══════╝╚═╝  ╚═╝
-
- ████████╗    ███████╗████████╗ █████╗  ██████╗██╗  ██╗
- ╚══██╔══╝    ██╔════╝╚══██╔══╝██╔══██╗██╔════╝██║ ██╔╝
-    ██║       ███████╗   ██║   ███████║██║     █████╔╝
-    ██║       ╚════██║   ██║   ██╔══██║██║     ██╔═██╗
-    ██║       ███████║   ██║   ██║  ██║╚██████╗██║  ██╗
-    ╚═╝       ╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝
- `;
-
 function HomeComponent() {
-  const healthCheck = useQuery(orpc.healthCheck.queryOptions());
-
   return (
-    <div className="container mx-auto max-w-3xl px-4 py-2">
-      <pre className="overflow-x-auto font-mono text-sm">{TITLE_TEXT}</pre>
-      <div className="grid gap-6">
-        <section className="rounded-lg border p-4">
-          <h2 className="mb-2 font-medium">API Status</h2>
-          <div className="flex items-center gap-2">
-            <div
-              className={`h-2 w-2 rounded-full ${healthCheck.data ? "bg-green-500" : "bg-red-500"}`}
-            />
-            <span className="text-muted-foreground text-sm">
-              {healthCheck.isLoading
-                ? "Checking..."
-                : healthCheck.data
-                  ? "Connected"
-                  : "Disconnected"}
-            </span>
-          </div>
-        </section>
+    <div className="container mx-auto max-w-5xl px-6 py-12">
+      <div className="mb-10">
+        <h1 className="text-3xl font-bold tracking-tight mb-2">
+          <span className="text-indigo-400">FALCON</span> Auth Admin Portal
+        </h1>
+        <p className="text-muted-foreground">
+          Centralized identity provider for FALCON applications.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Link to="/admin/users" className="block rounded-lg border p-5 hover:border-indigo-500/50 transition-colors">
+          <div className="text-2xl mb-2">👥</div>
+          <h2 className="font-semibold mb-1">User Management</h2>
+          <p className="text-sm text-muted-foreground">
+            View, create, ban, and impersonate users across the platform.
+          </p>
+        </Link>
+
+        <Link to="/admin/organizations" className="block rounded-lg border p-5 hover:border-indigo-500/50 transition-colors">
+          <div className="text-2xl mb-2">🏢</div>
+          <h2 className="font-semibold mb-1">Organizations</h2>
+          <p className="text-sm text-muted-foreground">
+            Manage organizations, members, and access control.
+          </p>
+        </Link>
+
+        <Link to="/dashboard" className="block rounded-lg border p-5 hover:border-indigo-500/50 transition-colors">
+          <div className="text-2xl mb-2">📊</div>
+          <h2 className="font-semibold mb-1">Dashboard</h2>
+          <p className="text-sm text-muted-foreground">
+            Overview of authentication activity and system health.
+          </p>
+        </Link>
       </div>
     </div>
   );

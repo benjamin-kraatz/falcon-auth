@@ -1,0 +1,70 @@
+---
+title: Installation
+description: Get started integrating FALCON Auth into your application
+---
+
+# Installation
+
+## Prerequisites
+
+Before integrating FALCON Auth, you'll need:
+
+1. **FALCON Auth Server URL** — Contact the FALCON team to get your server URL
+2. **OAuth Client Credentials** — Register your application to get a `clientId` and `clientSecret`
+
+## Register Your Application
+
+To register your application as an OAuth client, contact the FALCON team or use the admin portal:
+
+1. Go to the Admin Portal
+2. Navigate to **Settings → OAuth Applications**
+3. Click **Register New Application**
+4. Fill in your application name and redirect URIs
+5. Copy your `clientId` and `clientSecret`
+
+## Install the SDK
+
+```package-install
+@falcon-auth/sdk
+```
+
+The SDK is a TypeScript/JavaScript package that works in Node.js, Bun, Deno, and browser environments.
+
+## Environment Variables
+
+Add these to your `.env` file:
+
+```dotenv
+FALCON_AUTH_ISSUER_URL=https://auth.falcon.example.com
+FALCON_AUTH_CLIENT_ID=your-client-id
+FALCON_AUTH_CLIENT_SECRET=your-client-secret  # Server-side only!
+FALCON_AUTH_REDIRECT_URI=https://yourapp.com/auth/callback
+```
+
+<Callout type="warn">
+  Never expose your `FALCON_AUTH_CLIENT_SECRET` in client-side code or version control.
+</Callout>
+
+## Initialize the Client
+
+Create a shared auth client instance:
+
+```ts title="lib/auth.ts"
+import { createFalconAuthClient } from "@falcon-auth/sdk/client";
+
+export const falconAuth = createFalconAuthClient({
+  issuerUrl: process.env.FALCON_AUTH_ISSUER_URL!,
+  clientId: process.env.FALCON_AUTH_CLIENT_ID!,
+  clientSecret: process.env.FALCON_AUTH_CLIENT_SECRET!,
+  redirectUri: process.env.FALCON_AUTH_REDIRECT_URI!,
+});
+```
+
+## Verify It Works
+
+Test your setup by fetching the OIDC discovery document:
+
+```ts
+const discovery = await falconAuth.getDiscoveryDocument();
+console.log(discovery.issuer); // Should print your FALCON Auth server URL
+```
