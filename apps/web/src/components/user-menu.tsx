@@ -21,6 +21,9 @@ export default function UserMenu() {
     return <Skeleton className="h-9 w-24" />;
   }
 
+  const impersonatedBy = (session?.session as { impersonatedBy?: string } | undefined)
+    ?.impersonatedBy;
+
   if (!session) {
     return (
       <Link to="/login">
@@ -39,6 +42,17 @@ export default function UserMenu() {
           <DropdownMenuLabel>My Account</DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem>{session.user.email}</DropdownMenuItem>
+          {impersonatedBy ? (
+            <DropdownMenuItem
+              onClick={() => {
+                void authClient.admin.stopImpersonating().then(() => {
+                  window.location.href = "/admin";
+                });
+              }}
+            >
+              Stop impersonating
+            </DropdownMenuItem>
+          ) : null}
           <DropdownMenuItem
             variant="destructive"
             onClick={() => {

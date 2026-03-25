@@ -8,6 +8,7 @@
     "dev:bare": "vite dev"
   },
   "dependencies": {
+    "@better-auth/oauth-provider": "catalog:",
     "@falcon/auth-api": "workspace:*",
     "@falcon/auth-auth": "workspace:*",
     "@falcon/auth-env": "workspace:*",

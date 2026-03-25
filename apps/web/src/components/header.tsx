@@ -1,12 +1,19 @@
 import { Link } from "@tanstack/react-router";
 
+import { authClient } from "@/lib/auth-client";
+
 import UserMenu from "./user-menu";
 
 export default function Header() {
+  const { data: session } = authClient.useSession();
+  const isAdmin = (session?.user as { role?: string } | undefined)?.role === "admin";
+
   const links = [
     { to: "/", label: "Home" },
     { to: "/dashboard", label: "Dashboard" },
-  ] as const;
+    { to: "/org", label: "Organizations" },
+    ...(isAdmin ? ([{ to: "/admin", label: "Admin" }] as const) : []),
+  ];
 
   return (
     <div>
