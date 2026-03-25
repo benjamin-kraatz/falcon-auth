@@ -1,0 +1,33 @@
+{
+  "name": "@falcon-auth/sdk",
+  "version": "0.1.0",
+  "description": "FALCON Auth SDK - Integrate FALCON Auth as your identity provider",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./client": {
+      "default": "./src/client.ts"
+    },
+    "./react": {
+      "default": "./src/react.ts"
+    }
+  },
+  "scripts": {
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "better-auth": "1.5.5"
+  },
+  "devDependencies": {
+    "@falcon/auth-config": "workspace:*",
+    "typescript": "^5"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": { "optional": true }
+  }
+}
