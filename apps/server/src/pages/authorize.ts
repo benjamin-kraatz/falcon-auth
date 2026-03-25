@@ -48,7 +48,7 @@ export function renderAuthorizePage({ redirectTo, clientName, error }: Authorize
     <hr class="divider">
     
     <p class="text-center" style="font-size:0.85rem; color: var(--text-muted)">
-      Don't have an account? 
+      Don't have an account?
       <a href="/oauth/register?redirect_to=${encodedRedirect}" class="link">Create one</a>
     </p>
     
