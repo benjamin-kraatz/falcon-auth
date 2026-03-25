@@ -44,6 +44,7 @@
     "db:migrate": "nx run-many -t db:migrate --projects=@falcon/auth-db",
     "db:local": "nx run-many -t db:local --projects=@falcon/auth-db",
     "deploy": "nx run-many -t deploy --projects=@falcon/auth-infra",
+    "build:docs": "nx run @falcon/auth-docs:build",
     "destroy": "nx run-many -t destroy --projects=@falcon/auth-infra",
     "check": "oxlint && oxfmt --write"
   },
