@@ -1,5 +1,5 @@
 {
-  "name": "auth",
+  "name": "@falcon/auth",
   "private": true,
   "workspaces": {
     "packages": [
@@ -36,25 +36,25 @@
     "dev": "nx run-many -t dev",
     "build": "nx run-many -t build",
     "check-types": "nx run-many -t check-types",
-    "dev:web": "nx run-many -t dev --projects=web",
-    "dev:server": "nx run-many -t dev --projects=server",
-    "db:push": "nx run-many -t db:push --projects=@auth/db",
-    "db:studio": "nx run-many -t db:studio --projects=@auth/db",
-    "db:generate": "nx run-many -t db:generate --projects=@auth/db",
-    "db:migrate": "nx run-many -t db:migrate --projects=@auth/db",
-    "db:local": "nx run-many -t db:local --projects=@auth/db",
-    "deploy": "nx run-many -t deploy --projects=@auth/infra",
-    "destroy": "nx run-many -t destroy --projects=@auth/infra",
+    "dev:web": "nx run-many -t dev --projects=@falcon/auth-web",
+    "dev:server": "nx run-many -t dev --projects=@falcon/auth-server",
+    "db:push": "nx run-many -t db:push --projects=@falcon/auth-db",
+    "db:studio": "nx run-many -t db:studio --projects=@falcon/auth-db",
+    "db:generate": "nx run-many -t db:generate --projects=@falcon/auth-db",
+    "db:migrate": "nx run-many -t db:migrate --projects=@falcon/auth-db",
+    "db:local": "nx run-many -t db:local --projects=@falcon/auth-db",
+    "deploy": "nx run-many -t deploy --projects=@falcon/auth-infra",
+    "destroy": "nx run-many -t destroy --projects=@falcon/auth-infra",
     "check": "oxlint && oxfmt --write"
   },
   "dependencies": {
-    "@auth/env": "workspace:*",
+    "@falcon/auth-env": "workspace:*",
     "dotenv": "catalog:",
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auth/config": "workspace:*",
     "@cloudflare/workers-types": "catalog:",
+    "@falcon/auth-config": "workspace:*",
     "@types/node": "catalog:",
     "lefthook": "^2.0.13",
     "nx": "^21.5.2",

@@ -1,4 +1,4 @@
-import { auth } from "@auth/auth";
+import { auth } from "@falcon/auth-auth";
 import type { Context as HonoContext } from "hono";
 
 export type CreateContextOptions = {

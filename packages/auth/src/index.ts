@@ -1,6 +1,6 @@
-import { db } from "@auth/db";
-import * as schema from "@auth/db/schema/auth";
-import { env } from "@auth/env/server";
+import { db } from "@falcon/auth-db";
+import * as schema from "@falcon/auth-db/schema/auth";
+import { env } from "@falcon/auth-env/server";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 

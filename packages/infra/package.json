@@ -1,5 +1,5 @@
 {
-  "name": "@auth/infra",
+  "name": "@falcon/auth-infra",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,7 +12,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auth/config": "workspace:*",
+    "@falcon/auth-config": "workspace:*",
     "alchemy": "catalog:",
     "typescript": "^5"
   }

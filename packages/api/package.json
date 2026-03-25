@@ -1,5 +1,5 @@
 {
-  "name": "@auth/api",
+  "name": "@falcon/auth-api",
   "type": "module",
   "exports": {
     ".": {
@@ -11,9 +11,9 @@
   },
   "scripts": {},
   "dependencies": {
-    "@auth/auth": "workspace:*",
-    "@auth/db": "workspace:*",
-    "@auth/env": "workspace:*",
+    "@falcon/auth-auth": "workspace:*",
+    "@falcon/auth-db": "workspace:*",
+    "@falcon/auth-env": "workspace:*",
     "@orpc/client": "catalog:",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
@@ -22,7 +22,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auth/config": "workspace:*",
+    "@falcon/auth-config": "workspace:*",
     "hono": "catalog:",
     "typescript": "^5"
   }

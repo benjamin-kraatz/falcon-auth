@@ -1,5 +1,5 @@
-import type { AppRouter } from "@auth/api/routers/index";
-import { env } from "@auth/env/web";
+import type { AppRouter } from "@falcon/auth-api/routers/index";
+import { env } from "@falcon/auth-env/web";
 import { createORPCClient } from "@orpc/client";
 import { RPCLink } from "@orpc/client/fetch";
 import type { RouterClient } from "@orpc/server";

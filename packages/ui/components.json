@@ -12,11 +12,11 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@auth/ui/components",
-    "utils": "@auth/ui/lib/utils",
-    "hooks": "@auth/ui/hooks",
-    "lib": "@auth/ui/lib",
-    "ui": "@auth/ui/components"
+    "components": "@falcon/auth-ui/components",
+    "utils": "@falcon/auth-ui/lib/utils",
+    "hooks": "@falcon/auth-ui/hooks",
+    "lib": "@falcon/auth-ui/lib",
+    "ui": "@falcon/auth-ui/components"
   },
   "menuColor": "default",
   "menuAccent": "subtle",

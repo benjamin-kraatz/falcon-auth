@@ -23,7 +23,7 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@auth/ui/*": ["../../packages/ui/src/*"]
+      "@falcon/auth-ui/*": ["../../packages/ui/src/*"]
     }
   }
 }

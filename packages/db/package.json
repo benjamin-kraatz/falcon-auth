@@ -1,5 +1,5 @@
 {
-  "name": "@auth/db",
+  "name": "@falcon/auth-db",
   "type": "module",
   "exports": {
     ".": {
@@ -17,7 +17,7 @@
     "db:migrate": "drizzle-kit migrate"
   },
   "dependencies": {
-    "@auth/env": "workspace:*",
+    "@falcon/auth-env": "workspace:*",
     "@libsql/client": "catalog:",
     "dotenv": "catalog:",
     "drizzle-orm": "^0.45.1",
@@ -25,7 +25,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auth/config": "workspace:*",
+    "@falcon/auth-config": "workspace:*",
     "drizzle-kit": "^0.31.8",
     "typescript": "^5"
   }

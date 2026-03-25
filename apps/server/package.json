@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@falcon/auth-server",
   "type": "module",
   "main": "src/index.ts",
   "scripts": {
@@ -8,10 +8,10 @@
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server"
   },
   "dependencies": {
-    "@auth/api": "workspace:*",
-    "@auth/auth": "workspace:*",
-    "@auth/db": "workspace:*",
-    "@auth/env": "workspace:*",
+    "@falcon/auth-api": "workspace:*",
+    "@falcon/auth-auth": "workspace:*",
+    "@falcon/auth-db": "workspace:*",
+    "@falcon/auth-env": "workspace:*",
     "@orpc/openapi": "catalog:",
     "@orpc/server": "catalog:",
     "@orpc/zod": "catalog:",
@@ -21,8 +21,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auth/config": "workspace:*",
     "@cloudflare/workers-types": "catalog:",
+    "@falcon/auth-config": "workspace:*",
     "@types/node": "catalog:",
     "alchemy": "catalog:",
     "tsdown": "^0.16.5",

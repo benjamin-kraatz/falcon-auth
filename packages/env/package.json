@@ -1,5 +1,5 @@
 {
-  "name": "@auth/env",
+  "name": "@falcon/auth-env",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -13,8 +13,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auth/config": "workspace:*",
-    "@auth/infra": "workspace:*",
+    "@falcon/auth-config": "workspace:*",
+    "@falcon/auth-infra": "workspace:*",
     "@types/node": "catalog:",
     "typescript": "^5"
   }

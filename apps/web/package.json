@@ -1,5 +1,5 @@
 {
-  "name": "web",
+  "name": "@falcon/auth-web",
   "private": true,
   "type": "module",
   "scripts": {
@@ -8,10 +8,10 @@
     "dev:bare": "vite dev"
   },
   "dependencies": {
-    "@auth/api": "workspace:*",
-    "@auth/auth": "workspace:*",
-    "@auth/env": "workspace:*",
-    "@auth/ui": "workspace:*",
+    "@falcon/auth-api": "workspace:*",
+    "@falcon/auth-auth": "workspace:*",
+    "@falcon/auth-env": "workspace:*",
+    "@falcon/auth-ui": "workspace:*",
     "@libsql/client": "catalog:",
     "@orpc/client": "catalog:",
     "@orpc/server": "catalog:",
@@ -36,8 +36,8 @@
     "zod": "catalog:"
   },
   "devDependencies": {
-    "@auth/config": "workspace:*",
     "@cloudflare/vite-plugin": "^1.17.1",
+    "@falcon/auth-config": "workspace:*",
     "@tanstack/react-query-devtools": "^5.91.1",
     "@tanstack/react-router-devtools": "^1.141.1",
     "@testing-library/dom": "^10.4.0",

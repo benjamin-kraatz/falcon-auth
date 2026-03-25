@@ -1,6 +1,6 @@
-import { Button } from "@auth/ui/components/button";
-import { Input } from "@auth/ui/components/input";
-import { Label } from "@auth/ui/components/label";
+import { Button } from "@falcon/auth-ui/components/button";
+import { Input } from "@falcon/auth-ui/components/input";
+import { Label } from "@falcon/auth-ui/components/label";
 import { useForm } from "@tanstack/react-form";
 import { useNavigate } from "@tanstack/react-router";
 import { toast } from "sonner";

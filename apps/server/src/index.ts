@@ -1,7 +1,7 @@
-import { createContext } from "@auth/api/context";
-import { appRouter } from "@auth/api/routers/index";
-import { auth } from "@auth/auth";
-import { env } from "@auth/env/server";
+import { createContext } from "@falcon/auth-api/context";
+import { appRouter } from "@falcon/auth-api/routers/index";
+import { auth } from "@falcon/auth-auth";
+import { env } from "@falcon/auth-env/server";
 import { OpenAPIHandler } from "@orpc/openapi/fetch";
 import { OpenAPIReferencePlugin } from "@orpc/openapi/plugins";
 import { onError } from "@orpc/server";

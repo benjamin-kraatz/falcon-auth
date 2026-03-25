@@ -1,4 +1,4 @@
-import { cn } from "@auth/ui/lib/utils";
+import { cn } from "@falcon/auth-ui/lib/utils";
 import { Input as InputPrimitive } from "@base-ui/react/input";
 import * as React from "react";
 
