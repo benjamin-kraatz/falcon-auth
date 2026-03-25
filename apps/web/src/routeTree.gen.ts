@@ -9,6 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
+import { Route as AdminOrganizationsRouteImport } from "./routes/admin/organizations";
+import { Route as AdminUsersRouteImport } from "./routes/admin/users";
 import { Route as LoginRouteImport } from "./routes/login";
 import { Route as DashboardRouteImport } from "./routes/dashboard";
 import { Route as IndexRouteImport } from "./routes/index";
@@ -28,35 +30,53 @@ const IndexRoute = IndexRouteImport.update({
   path: "/",
   getParentRoute: () => rootRouteImport,
 } as any);
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: "/admin/users",
+  path: "/admin/users",
+  getParentRoute: () => rootRouteImport,
+} as any);
+const AdminOrganizationsRoute = AdminOrganizationsRouteImport.update({
+  id: "/admin/organizations",
+  path: "/admin/organizations",
+  getParentRoute: () => rootRouteImport,
+} as any);
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
   "/dashboard": typeof DashboardRoute;
   "/login": typeof LoginRoute;
+  "/admin/users": typeof AdminUsersRoute;
+  "/admin/organizations": typeof AdminOrganizationsRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
   "/dashboard": typeof DashboardRoute;
   "/login": typeof LoginRoute;
+  "/admin/users": typeof AdminUsersRoute;
+  "/admin/organizations": typeof AdminOrganizationsRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
   "/dashboard": typeof DashboardRoute;
   "/login": typeof LoginRoute;
+  "/admin/users": typeof AdminUsersRoute;
+  "/admin/organizations": typeof AdminOrganizationsRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/dashboard" | "/login";
+  fullPaths: "/" | "/dashboard" | "/login" | "/admin/users" | "/admin/organizations";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/dashboard" | "/login";
-  id: "__root__" | "/" | "/dashboard" | "/login";
+  to: "/" | "/dashboard" | "/login" | "/admin/users" | "/admin/organizations";
+  id: "__root__" | "/" | "/dashboard" | "/login" | "/admin/users" | "/admin/organizations";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
   DashboardRoute: typeof DashboardRoute;
   LoginRoute: typeof LoginRoute;
+  AdminUsersRoute: typeof AdminUsersRoute;
+  AdminOrganizationsRoute: typeof AdminOrganizationsRoute;
 }
 
 declare module "@tanstack/react-router" {
@@ -82,6 +102,20 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof IndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
+    "/admin/users": {
+      id: "/admin/users";
+      path: "/admin/users";
+      fullPath: "/admin/users";
+      preLoaderRoute: typeof AdminUsersRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/admin/organizations": {
+      id: "/admin/organizations";
+      path: "/admin/organizations";
+      fullPath: "/admin/organizations";
+      preLoaderRoute: typeof AdminOrganizationsRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
   }
 }
 
@@ -89,6 +123,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  AdminUsersRoute: AdminUsersRoute,
+  AdminOrganizationsRoute: AdminOrganizationsRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
