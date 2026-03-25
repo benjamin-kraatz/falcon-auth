@@ -1,0 +1,36 @@
+{
+  "name": "@falcon-auth/sdk",
+  "version": "0.1.0",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./node": {
+      "default": "./src/node.ts"
+    },
+    "./react": {
+      "default": "./src/react.ts"
+    }
+  },
+  "scripts": {
+    "build": "tsdown",
+    "check-types": "tsc -b"
+  },
+  "dependencies": {
+    "better-auth": "catalog:"
+  },
+  "peerDependencies": {
+    "react": ">=19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@falcon/auth-config": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "^5"
+  }
+}

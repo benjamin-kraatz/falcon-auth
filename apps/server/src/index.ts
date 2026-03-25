@@ -10,6 +10,7 @@ import { ZodToJsonSchemaConverter } from "@orpc/zod/zod4";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
+import { consentHtml, signInHtml, signUpHtml } from "./pages";
 
 const app = new Hono();
 
@@ -25,6 +26,34 @@ app.use(
 );
 
 app.on(["POST", "GET"], "/api/auth/*", (c) => auth.handler(c.req.raw));
+
+// ---------------------------------------------------------------------------
+// Hosted HTML pages (served by the auth server itself)
+// ---------------------------------------------------------------------------
+
+app.get("/sign-in", (c) => c.html(signInHtml()));
+app.get("/sign-up", (c) => c.html(signUpHtml()));
+app.get("/consent", (c) => c.html(consentHtml()));
+
+// ---------------------------------------------------------------------------
+// Well-known / discovery endpoints – forward to better-auth's OIDC handler
+// ---------------------------------------------------------------------------
+
+app.get("/.well-known/openid-configuration", (c) => {
+  const url = new URL(c.req.url);
+  url.pathname = "/api/auth/oauth2/.well-known/openid-configuration";
+  return auth.handler(
+    new Request(url.toString(), { method: "GET", headers: c.req.raw.headers }),
+  );
+});
+
+app.get("/.well-known/oauth-authorization-server", (c) => {
+  const url = new URL(c.req.url);
+  url.pathname = "/api/auth/oauth2/.well-known/openid-configuration";
+  return auth.handler(
+    new Request(url.toString(), { method: "GET", headers: c.req.raw.headers }),
+  );
+});
 
 export const apiHandler = new OpenAPIHandler(appRouter, {
   plugins: [
