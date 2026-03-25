@@ -34,7 +34,7 @@ The SDK is a TypeScript/JavaScript package that works in Node.js, Bun, Deno, and
 
 Add these to your `.env` file:
 
-```env
+```dotenv
 FALCON_AUTH_ISSUER_URL=https://auth.falcon.example.com
 FALCON_AUTH_CLIENT_ID=your-client-id
 FALCON_AUTH_CLIENT_SECRET=your-client-secret  # Server-side only!
@@ -42,7 +42,7 @@ FALCON_AUTH_REDIRECT_URI=https://yourapp.com/auth/callback
 ```
 
 <Callout type="warn">
-Never expose your `FALCON_AUTH_CLIENT_SECRET` in client-side code or version control.
+  Never expose your `FALCON_AUTH_CLIENT_SECRET` in client-side code or version control.
 </Callout>
 
 ## Initialize the Client
