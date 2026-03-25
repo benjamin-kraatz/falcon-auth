@@ -229,7 +229,7 @@
       "name": "@falcon-auth/sdk",
       "version": "0.1.0",
       "dependencies": {
-        "better-auth": "1.5.5",
+        "better-auth": "catalog:",
       },
       "devDependencies": {
         "@falcon/auth-config": "workspace:*",

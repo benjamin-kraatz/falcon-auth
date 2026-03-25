@@ -4,10 +4,12 @@ import { env } from "@falcon/auth-env/server";
 import { oauthProvider } from "@better-auth/oauth-provider";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
-import { admin } from "better-auth/plugins/admin";
-import { jwt } from "better-auth/plugins/jwt";
-import { openAPI } from "better-auth/plugins/open-api";
-import { organization } from "better-auth/plugins/organization";
+import {
+  admin,
+  jwt,
+  openAPI,
+  organization,
+} from "better-auth/plugins";
 
 export const auth = betterAuth({
   appName: "FALCON Auth",
