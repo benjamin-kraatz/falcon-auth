@@ -1,0 +1,21 @@
+{
+  "name": "@falcon/auth-docs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "src",
+  "targets": {
+    "build": {
+      "executor": "nx:run-script",
+      "options": {
+        "script": "build"
+      },
+      "dependsOn": []
+    },
+    "check-types": {
+      "executor": "nx:run-script",
+      "options": {
+        "script": "check-types"
+      }
+    }
+  }
+}
