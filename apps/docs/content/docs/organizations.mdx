@@ -1,0 +1,26 @@
+---
+title: Organizations & teams
+description: Multi-tenant structure for members and teams.
+icon: Users
+---
+
+FALCON Auth enables the Better Auth **organization** plugin with **teams** turned on.
+
+## Concepts
+
+- **Organization** — A tenant (company, workspace, or project) identified by a unique slug.
+- **Member** — A user belonging to an organization with a **role** (for example owner, admin, member).
+- **Team** — A group inside an organization; members can belong to teams for finer access control in your apps.
+- **Invitation** — Email-based invites with expiry and status.
+
+## User-facing UI
+
+The web app includes `/org` to create organizations, list yours, and set the **active organization** on the session (`activeOrganizationId` on the session row).
+
+## APIs
+
+All organization routes are exposed under the Better Auth base path (for example `/api/auth/organization/*`). Use the Better Auth client with `organizationClient()` or call the HTTP API with a valid session cookie or bearer token as configured.
+
+## Partner apps
+
+Third-party apps typically use **OAuth scopes** and optional custom claims rather than calling organization APIs directly. Map organization and team membership in your resource server after token validation.

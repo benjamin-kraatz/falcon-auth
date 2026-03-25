@@ -1,0 +1,39 @@
+---
+title: OAuth & OpenID Connect
+description: Integrate FALCON Auth as an OAuth 2.1 / OIDC provider.
+icon: KeyRound
+---
+
+FALCON Auth runs the Better Auth **OAuth provider** plugin. Your applications register as OAuth clients and use the standard authorization code flow with **PKCE**.
+
+## Discovery
+
+- **OpenID Provider Configuration**: `GET /.well-known/openid-configuration` on your server origin
+- **Authorization Server Metadata**: `GET /.well-known/oauth-authorization-server`
+
+The issuer and token endpoints are also exposed under the Better Auth base path (default `/api/auth`), for example:
+
+- `GET {issuer}/api/auth/oauth2/authorize`
+- `POST {issuer}/api/auth/oauth2/token`
+
+Use the discovery documents as the source of truth for exact URLs.
+
+## Register a client
+
+Use dynamic client registration if enabled, or create a client via the Better Auth API / database according to your deployment policy. Store **client secrets** only on servers; public/native clients must use PKCE without a secret.
+
+## Scopes
+
+Request at least `openid` for OIDC. Add `profile` and `email` for standard claims on the userinfo endpoint. Request additional scopes only when your app needs them; the consent screen lists requested scopes.
+
+## Redirect URIs
+
+Use HTTPS redirect URIs in production. Register every exact redirect URI; do not rely on wildcards unless your policy explicitly allows them.
+
+## Hosted login and consent
+
+When a user must sign in or approve scopes, they are redirected to the configured hosted pages (`/hosted/sign-in`, `/hosted/consent`). After sign-in, Better Auth continues the OAuth flow using signed `oauth_query` parameters.
+
+## Token verification
+
+Verify access tokens on your resource servers using the JWKS URL from discovery and the expected `issuer` and `audience`. Prefer short-lived access tokens and refresh token rotation.

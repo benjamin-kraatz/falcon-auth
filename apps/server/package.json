@@ -8,6 +8,7 @@
     "compile": "bun build --compile --minify --sourcemap --bytecode ./src/index.ts --outfile server"
   },
   "dependencies": {
+    "@better-auth/oauth-provider": "catalog:",
     "@falcon/auth-api": "workspace:*",
     "@falcon/auth-auth": "workspace:*",
     "@falcon/auth-db": "workspace:*",

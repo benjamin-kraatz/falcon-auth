@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite dev --port=4000",
     "build": "vite build",
+    "check-types": "fumadocs-mdx && tsc --noEmit",
     "start": "node .output/server/index.mjs",
     "preview": "vite preview",
-    "types:check": "fumadocs-mdx && tsc --noEmit",
+    "types:check": "bun run check-types",
     "postinstall": "fumadocs-mdx"
   },
   "dependencies": {

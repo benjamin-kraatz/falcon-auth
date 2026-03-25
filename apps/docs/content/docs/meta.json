@@ -1,0 +1,15 @@
+{
+  "title": "FALCON Auth",
+  "pages": [
+    "index",
+    "overview",
+    "quickstart",
+    "oauth-oidc",
+    "admin",
+    "organizations",
+    "sdk",
+    "security",
+    "vercel",
+    "falcon-connect"
+  ]
+}

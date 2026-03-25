@@ -4,7 +4,11 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./server": "./src/server.ts",
+    "./server": {
+      "workerd": "./src/server.ts",
+      "import": "./src/server-node.ts",
+      "default": "./src/server-node.ts"
+    },
     "./web": "./src/web.ts"
   },
   "dependencies": {

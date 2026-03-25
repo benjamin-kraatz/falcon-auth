@@ -1,0 +1,28 @@
+---
+title: Admin portal
+description: Managing users and impersonation for the FALCON team.
+icon: Shield
+---
+
+The **web application** (`/admin`) is the operations console for the FALCON team. It uses the Better Auth **admin** plugin over the same session as end users.
+
+## Who can access
+
+A user is an admin if either:
+
+- Their `role` field is `admin`, or
+- Their user id is listed in `FALCON_ADMIN_USER_IDS` (comma-separated) on the server.
+
+Set bootstrap admin IDs in environment configuration so the first operators can sign in without manual SQL.
+
+## Capabilities
+
+- **List and search users** — Paginated listing with search (via `admin.listUsers`).
+- **Create users** — Create accounts with an initial password; require password change in your app if needed.
+- **Impersonate** — Starts a session as another user for support. The session records `impersonatedBy`. Use **Stop impersonating** in the user menu to return to your own account.
+
+## Security expectations
+
+- Restrict `/admin` to trusted networks or additional hardening (IP allow lists, SSO for admins only) in production.
+- Audit impersonation usage; sessions are labeled in the database.
+- Never share admin credentials; use individual accounts.

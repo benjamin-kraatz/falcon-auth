@@ -18,6 +18,8 @@ export const web = await TanStackStart("web", {
     BETTER_AUTH_SECRET: alchemy.secret.env.BETTER_AUTH_SECRET!,
     BETTER_AUTH_URL: alchemy.env.BETTER_AUTH_URL!,
     DATABASE_AUTH_TOKEN: alchemy.secret.env.DATABASE_AUTH_TOKEN!,
+    FALCON_ADMIN_USER_IDS: alchemy.env.FALCON_ADMIN_USER_IDS ?? "",
+    FALCON_TRUSTED_ORIGINS: alchemy.env.FALCON_TRUSTED_ORIGINS ?? "",
   },
 });
 
@@ -31,6 +33,8 @@ export const server = await Worker("server", {
     BETTER_AUTH_SECRET: alchemy.secret.env.BETTER_AUTH_SECRET!,
     BETTER_AUTH_URL: alchemy.env.BETTER_AUTH_URL!,
     DATABASE_AUTH_TOKEN: alchemy.secret.env.DATABASE_AUTH_TOKEN!,
+    FALCON_ADMIN_USER_IDS: alchemy.env.FALCON_ADMIN_USER_IDS ?? "",
+    FALCON_TRUSTED_ORIGINS: alchemy.env.FALCON_TRUSTED_ORIGINS ?? "",
   },
   dev: {
     port: 3000,

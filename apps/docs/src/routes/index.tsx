@@ -11,15 +11,18 @@ function Home() {
   return (
     <HomeLayout {...baseOptions()}>
       <div className="flex flex-col flex-1 justify-center px-4 py-8 text-center">
-        <h1 className="font-medium text-xl mb-4">Fumadocs on Tanstack Start.</h1>
+        <h1 className="mb-2 font-medium text-2xl">FALCON Auth</h1>
+        <p className="text-fd-muted-foreground mx-auto mb-6 max-w-md text-sm">
+          Documentation for operators and partners integrating with the FALCON identity platform.
+        </p>
         <Link
           to="/docs/$"
           params={{
             _splat: "",
           }}
-          className="px-3 py-2 rounded-lg bg-fd-primary text-fd-primary-foreground font-medium text-sm mx-auto"
+          className="bg-fd-primary text-fd-primary-foreground mx-auto rounded-lg px-4 py-2 text-sm font-medium"
         >
-          Open Docs
+          Open documentation
         </Link>
       </div>
     </HomeLayout>
